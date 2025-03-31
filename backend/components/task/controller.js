@@ -11,17 +11,28 @@ module.exports = {
             const toDoTasks = tasks.filter(task => task.status === "to_do");
             const doingTasks = tasks.filter(task => task.status === "doing");
             const doneTasks = tasks.filter(task => task.status === "done");
-
+            
             res.status(200).json({ toDoTasks, doingTasks, doneTasks });
         }
         catch (error) {
             res.status(500).json({ message: error.message });
         }
     },
+    getTaskById: async (req, res) => {
+        try {
+            const taskId = req.params.id;
+            const task = await taskModel.findByPk(taskId);
+            res.status(200).json({ task });
+        }
+        catch (error) {
+            res.status(500).json({ message: error.message });
+        }
+    },
+
     getTaskByDueDate: async (req, res) => {
         try {
             const user_id = req.user_id;
-            const { due_date } = req.body;
+            const due_date = req.query.date;
             const tasks = await taskModel.findAll({ where: { user_id, due_date: { [Op.lte]: due_date } } });
 
             const toDoTasks = tasks.filter(task => task.status === "to_do");
@@ -45,16 +56,6 @@ module.exports = {
             res.status(500).json({ message: error.message });
         }
     },
-    changeStatus: async (req, res) => {
-        try {
-            const { id, status } = req.body;
-            await taskModel.update({ status }, { where: { id } });
-            res.status(200).json({ message: "Task status updated successfully" });
-        }
-        catch (error) {
-            res.status(500).json({ message: error.message });
-        }
-    },
     deleteTask: async (req, res) => {
         try {
             const { id } = req.body;
@@ -67,9 +68,9 @@ module.exports = {
     },
     updateTask: async (req, res) => {
         try {
-            const { id, name, description, due_date } = req.body;
+            const { id, name, description, due_date, status } = req.body;
 
-            await taskModel.update({ name, description, due_date }, { where: { id } });
+            await taskModel.update({ name, description, due_date, status }, { where: { id } });
             res.status(200).json({ message: "Task updated successfully" });
         }
         catch (error) {

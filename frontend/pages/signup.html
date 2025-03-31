@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+
+<head>
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -8,48 +9,70 @@
     <!-- google font: Inter -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap"
-      rel="stylesheet"
-    />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
     <!-- main css -->
     <link rel="stylesheet" href="../css/main.css" />
     <link rel="stylesheet" href="../css/entry-page.css" />
-  </head>
-  <body>
+</head>
+
+<body>
     <div class="row height-full">
-      <!-- left side -->
-      <div
-        class="left-column flex flex-column height-full justify-center items-center"
-      >
-        <h1 class="welcoming-title">Hello</h1>
-        <form class="form" autocomplete="off">
-          <label for="email" class="label">Email</label>
-          <input type="email" name="email" id="email" class="input" required />
+        <!-- left side -->
+        <div class="left-column flex flex-column height-full justify-center items-center">
+            <h1 class="welcoming-title">Hello</h1>
+            <form class="form" autocomplete="off">
+                <label for="username" class="label">Username</label>
+                <input type="text" name="username" id="username" class="input" required />
 
-          <label for="password" class="label">Password</label>
-          <input
-            type="password"
-            name="password"
-            id="password"
-            class="input"
-            required
-          />
+                <label for="password" class="label">Password</label>
+                <input type="password" name="password" id="password" class="input" required />
 
-          <button
-            type="submit"
-            class="button regular-button pink-background cta-btn"
-          >
-            Sign up
-          </button>
-        </form>
-        <p class="login-prompt">
-          Already have an account?
-          <a href="./login.html" class="log-in-link">Log in</a>
-        </p>
-      </div>
-      <!-- right side -->
-      <div class="right-column"></div>
+                <button type="submit" class="button regular-button pink-background cta-btn">
+                    Sign up
+                </button>
+            </form>
+            <p class="login-prompt">
+                Already have an account?
+                <a href="./login.html" class="log-in-link">Log in</a>
+            </p>
+        </div>
+        <!-- right side -->
+        <div class="right-column"></div>
     </div>
-  </body>
+</body>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const form = document.querySelector(".form");
+
+        form.addEventListener("submit", async function (event) {
+            event.preventDefault();
+
+            const username = document.getElementById("username").value;
+            const password = document.getElementById("password").value;
+
+            try {
+                const response = await fetch("http://localhost:3000/api/user/register", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({ username, password }),
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    window.location.href = "./login.html"; // Chuyển hướng đến trang đăng nhập
+                } else {
+                    alert(data.message);
+                }
+            } catch (error) {
+                console.error("Error:", error);
+                alert("Something went wrong. Please try again.");
+            }
+        });
+    });
+</script>
+
 </html>
