@@ -7,7 +7,13 @@ module.exports = {
         database: process.env.DB_NAME || 'my_database',
         host: process.env.DB_HOST || 'localhost',
         port: process.env.DB_PORT || 5432,
-        dialect: process.env.DB_DIALECT || 'postgres'
+        dialect: process.env.DB_DIALECT || 'postgres',
+        dialectOptions: {
+            ssl: {
+                require: true, // Bật SSL
+                rejectUnauthorized: false // Chấp nhận chứng chỉ tự ký của RDS
+            }
+        }
     },
     test: {
         username: process.env.DB_USER || 'postgres',
